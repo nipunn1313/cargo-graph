@@ -218,6 +218,40 @@ impl<'c, 'o> DepGraph<'c, 'o> {
         self.edges.dedup();
         self.remove_orphans();
         self.remove_self_pointing();
+
+        let impt = vec![
+            "tree",
+            "database",
+            "sawmill",
+            "trinity",
+            "disk_usage_manager",
+            "config",
+            "pre_local",
+            "network",
+            "planning",
+            "fileid_manager",
+            "diff",
+            "protocol",
+            "testing",
+            "common",
+            "heirloom",
+            "scripts",
+            "canopy_check",
+            "app_interface",
+            "canopy",
+            "startup",
+            "fs",
+            "nucleus_engine",
+            "mount_table",
+            "nucleus_c_api",
+            "nucleus_c_api",
+        ];
+        let unimpt_idxs: Vec<usize> = self.nodes.iter().enumerate().filter_map(|(idx, node)| if impt.contains(&node.name.as_str()) {None} else {Some(idx)}).collect();
+        for (which, idx) in unimpt_idxs.into_iter().enumerate() {
+            eprintln!("Removing {}", self.nodes[idx - which].name);
+            self.remove(idx - which);
+        }
+
         debugln!("dg={:#?}", self);
         try!(writeln!(output, "{}", "digraph dependencies {"));
         for (i, dep) in self.nodes.iter().enumerate() {
