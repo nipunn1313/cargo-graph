@@ -1,3 +1,4 @@
+use std::env;
 use std::fmt;
 use std::io::{self, Write};
 
@@ -222,34 +223,66 @@ impl<'c, 'o> DepGraph<'c, 'o> {
         // nipunn-mbp:nucleus nipunn$ find . -name Cargo.toml | xargs grep --no-filename "name =" | sed 's/name = //' | sed 's/$/,/' | sort -u
         let impt = vec![
             "app_interface",
+            "async",
+            "backoff",
+            "bitslab",
             "canopy",
             "canopy_check",
+            "casefold",
             "common",
             "config",
+            "cyclotron",
             "database",
+            "dbx-collections",
+            "debug_enum_int_derive",
             "diff",
             "disk_usage_manager",
+            "dynamic_loader",
+            "environment",
+            "event_queue",
+            "events",
+            "events_derive",
             "fileid_manager",
+            "filename",
             "fs",
             "heirloom",
+            "hello_world",
+            "http2_connection",
+            "intent_manager",
             "mount_table",
             "network",
+            "ntdll",
             "nucleus_c_api",
             "nucleus_engine",
+            "pb_service",
             "planning",
             "pre_local",
+            "prost",
             "protocol",
+            "resync",
+            "rpc_shim",
             "sawmill",
             "scripts",
             "startup",
             "testing",
+            "transport_adapter",
             "tree",
             "trinity",
         ];
-        let unimpt_idxs: Vec<usize> = self.nodes.iter().enumerate().filter_map(|(idx, node)| if impt.contains(&node.name.as_str()) {None} else {Some(idx)}).collect();
-        for (which, idx) in unimpt_idxs.into_iter().enumerate() {
-            eprintln!("Removing {}", self.nodes[idx - which].name);
-            self.remove(idx - which);
+        let unimpt_idxs: Vec<usize> = self.nodes.iter().enumerate().filter_map(|(idx, node)| {
+            if node.name.contains("proto") {
+                None
+            } else if impt.contains(&node.name.as_str()) {
+                None
+            } else {
+                Some(idx)
+            }
+        }).collect();
+        if env::var("DONT_SKIP").is_err() {
+            for (which, idx) in unimpt_idxs.into_iter().enumerate() {
+                eprintln!("Removing {}", self.nodes[idx - which].name);
+                self.remove(idx - which);
+            }
         }
 
         debugln!("dg={:#?}", self);
