@@ -270,8 +270,8 @@ impl<'c, 'o> DepGraph<'c, 'o> {
             "trinity",
         ];
         let unimpt_idxs: Vec<usize> = self.nodes.iter().enumerate().filter_map(|(idx, node)| {
-            if node.name.contains("proto") {
-                None
+            if node.name.contains("proto_") {
+                Some(idx)
             } else if impt.contains(&node.name.as_str()) {
                 None
             } else {

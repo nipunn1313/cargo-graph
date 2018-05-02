@@ -1,3 +1,9 @@
+# NIPUNN'S FORK INSTRUCTIONS
+
+```
+nipunn-mbp:c_api nipunn$ PATH=~/src/cargo-graph/target/debug:$PATH cargo graph | dot -Tpng -o graph.png
+```
+
 # cargo-graph
 
 Linux: [![Build Status](https://travis-ci.org/kbknapp/cargo-graph.svg?branch=master)](https://travis-ci.org/kbknapp/cargo-graph)
